@@ -1,0 +1,236 @@
+ float x,y,z,r,a;
+ //variables para posicion en x mujeres
+  float posx = 0.4;
+  float dir = 0.1;
+  float vel=0.4;
+  //variables para posicion en y mujeres
+  float vely=0.6;
+  float posy = 0.4;
+  float diry=0.3;
+  
+  
+   //variables para posicion en x hombres
+  float posxh = 0.4;
+  float dirh = 0.2;
+  float velh=0.2;
+  //variables para posicion en y hombres
+  float velyh=0.3;
+  float posyh = 0.4;
+  float diryh=1.2;
+  
+   //variables para posicion en x text
+  float posxt = 0.4;
+  float dirt = 0.5;
+  float velt=0.1;
+  //variables para posicion en y text
+  float velyt=0.1;
+  float posyt = 0.1;
+  float diryt=0.2;
+  
+Table tabla;
+PImage fondo; 
+PImage men;
+PImage women;
+PFont fuente12;
+PFont fuente18;
+PFont fuente25;
+PFont fuente20;
+PFont fuente70;
+PFont titulo;
+color c1 = color(204, 102, 0);
+color c2 = color(0, 102, 153);
+color interA = lerpColor(c1, c2, .50);
+color interB = lerpColor(c1, c2, .66);
+
+void setup() {  
+  size(1920,1080,P3D);
+
+ 
+  fuente12=loadFont("KohinoorBangla-Light-12.vlw");
+  fuente18=loadFont("KohinoorDevanagari-Regular-18.vlw");
+  fuente25=loadFont("KohinoorDevanagari-Semibold-25.vlw");
+  fuente20=loadFont("KohinoorDevanagari-Medium-20.vlw");
+  fuente70=loadFont("KohinoorDevanagari-Bold-70.vlw");  
+  smooth (1);
+  
+  
+  men = loadImage("men.png");
+  women = loadImage("women.png");
+
+  
+  tabla = loadTable("becas-maestria.csv", "header"); //cargar encabezados
+  
+  println(tabla.getRowCount() + " filas totales en la tabla"); //contar cuantas filas tiene el csv
+  
+  
+
+
+  // crear una imagen 
+//save("tabla.jpg");
+  }
+ 
+void draw() {
+    background(0);
+translate(x,y,z);
+
+  for (TableRow row : tabla.rows()) {   
+    
+    int id = row.getInt("id"); //cargar celda id
+    int fecha = row.getInt("Fecha"); //cargar celda fecha 
+    int hombres = row.getInt("Hombres"); // celda numero de hombres  
+    int mujeres = row.getInt("Mujeres"); //celda numero de mujeres 
+    float promediom = mujeres/9;
+    float promedioh = hombres/9;
+    
+    println(mujeres + " mujeres" + "("+ hombres +" hombres)  en " + fecha);
+    
+
+
+  posx=posx + (vel*dir);
+  posy=posy + (vely*diry);
+  posxh=posxh + (velh*dirh);
+  posyh=posyh + (velyh*diryh);
+  posxt=posxt + (velt*dirt);
+   
+
+/*       // promedio de mujeres en los 9 años
+  noStroke();
+  fill(255,89);
+  ellipse(30+random(4+promediom*5),300-random(4+promediom*3),10+(promediom/5),10+(promediom/5));
+  
+    //promedio de hombres en los 9 años
+  noStroke();
+  fill(0,89);
+  ellipse(610+random(2+promedioh*5),480+random(2+promedioh*3),(promedioh/2),(promedioh/2));
+*/
+   //texto años
+   fill(interA,150);
+   textFont(fuente70);
+   textSize(hombres-mujeres+20);
+   textAlign(CENTER, CENTER);
+   text(fecha,-50+(id*180),900-(promedioh/2*id+180));
+   
+   
+ //circulo dato mujeres
+    strokeWeight(10);
+    stroke(c1,80);
+    fill(c1);
+    ellipseMode(RADIUS);
+    ellipse(posx+(-50+(id*180)),posy+(1000-(promedioh/2*id+180)),10+(mujeres/15),10+(mujeres/15));
+     
+    //condicional para mover mujeres en x
+  if (posx > 60 || posx < -10){
+   dir=dir*-1;
+  }
+//condicional para mover mujeres en y   
+   if (posy >90 || posy <0){
+     diry=diry*-1;
+
+}
+    //condicional para mover hombres en x
+  if (posxh > 60 || posxh < -10){
+   dirh=dirh*-1;
+  }
+//condicional para mover la hombres en y   
+   if (posyh >90 || posyh <0){
+     diryh=diryh*-1;
+
+}
+
+    //condicional para mover la elipse en x
+  if (posxt > 60 || posxt < -10){
+   dirt=dirt*-1;
+  }
+//condicional para mover la elipse en y   
+   if (posyt >90 || posyt <0){
+     diryt=diryt*-1;
+
+}
+
+   //ellipse(-30+(id*100),560-(promedioh/2*id+60),10+(mujeres/15),10+(mujeres/15));
+   
+//linea mujeres
+  line(90, 400,posx+(-50+(id*180)),posy+(1000-(promedioh/2*id+180)));
+  
+   //texto datos mujeres
+  textFont(fuente18);
+  noStroke();
+  fill(255);  
+  text(mujeres,posx+(-50+(id*180)),posy+(1000-(promedioh/2*id+180)));
+  
+  //icono mujeres 
+    noStroke();
+  fill(c1,100);
+  ellipseMode(CENTER);
+  ellipse(90,400,120,120); 
+  imageMode(CENTER);
+  image(women, 90,400, 120, 120);
+
+  //circulo dato hombres
+    strokeWeight(10);
+    stroke(c2,80);
+    fill(c2);
+    ellipseMode(RADIUS);
+   ellipse(posxh+(-50+(id*160)),posyh+(730-(promedioh/2*id+60)),10+(hombres/15),10+(hombres/15));
+  
+   //linea hombres
+   line(1800,900,posxh+(-50+(id*160)),posyh+(730-(promedioh/2*id+60)));
+   
+   //icono hombres 
+  noStroke();
+  fill(c2,100);
+  ellipseMode(CENTER);
+  ellipse(1800,900,120,120); 
+  imageMode(CENTER);
+  image(men, 1800,900,120, 120);
+  
+   
+   //texto datos hombres
+  textFont(fuente18);
+  noStroke();
+  fill(255);  
+  text(hombres,posxh+(-50+(id*160)),posyh+(730-(promedioh/2*id+60)));
+  
+  
+  
+  
+  //titulo grafica
+       fill(interA,20);  
+    textFont(fuente70);
+    textSize(50);
+    textAlign(LEFT);
+    text ("Crédito y becas", 10,120);
+    
+    fill(c1,30); 
+    textFont(fuente70);
+    textSize(25);
+    textAlign(LEFT);
+    text ("Crédito para maestría", 10,150);
+    
+    fill(c1,30); 
+    textFont(fuente70);
+    textSize(25);
+    textAlign(LEFT);
+    text ("según sexo del beneficiario", 80,175);
+          
+    fill(interA,20); 
+    textFont(fuente70);
+    textSize(50);
+    textAlign(LEFT);
+    text ("2004 - 2013*", 300,210);
+
+//TEXTO ACLARACION GRAFICA
+  fill(255,30);        
+  textFont(fuente18);
+  text("*No se obtuvo información de becarios por sexo, correspondientes\n a apoyos del ICETEX para el periodo 2004 a 2007 y 2011 a 2013,\n y del Banco de la República en los años 2010 y 2013.\n En total hay 8.288  beneficiarios sin clasificar por sexo.", 1300,1000);
+  
+  
+  //TEXT CREDITO
+    fill(255,100);        
+  textFont(fuente12);
+  textSize(12);
+  text("  Fuentes: Banco de la República, British Council, Colciencias, Colfuturo, Comisión Fulbright Colombia, Ecopetrol, Fundación Mazda, ICETEX, MAEC-AECID.", 50,1070);
+
+  
+     }
+}
